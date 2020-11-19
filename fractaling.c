@@ -3,9 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <time.h>
 #include <pthread.h>
-#include "tpool.h"
+#include "lib/tpool.h"
 #include <sys/time.h>
 
 /**************************COMPILATION INSTRUCTION*****************************/
@@ -29,9 +28,9 @@ float CXN = 1.0;	//Maximum x coordinate
 /*******************************FUNCTIONS*************************************/
 void calc_color(void *arg);
 void parseArguments(int argc, char *argv[]);
+
 /*****************************MAIN FUNCTION***********************************/
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
 	parseArguments(argc, argv);
 	printf("%i %f %f %f %f %i\n", YMAX, CX0, CXN, CY0, CYN, MAX_ITR);	
 	//Initiate the time	
@@ -61,7 +60,7 @@ int main(int argc, char *argv[])
 	fprintf(stderr, "The process took %ld.%06ld seconds to execute\n", dt.tv_sec, dt.tv_usec);
 	
 	// Create a file which have the image in format ppm and write the result
-	FILE *fp = fopen("fractaling.ppm", "w+");
+	FILE *fp = fopen("output/fractaling.ppm", "w+");
 	fprintf(fp, "P2\n%d %d\n%d\n", XMAX, YMAX, 255);
 	for(j = 0; j < YMAX; ++j)
 		for(i = 0; i < XMAX; ++i)		
@@ -71,18 +70,15 @@ int main(int argc, char *argv[])
 }
 
 /*******************************FUNCTIONS*************************************/
-void calc_color(void *arg)
-{
+void calc_color(void *arg){
 	//Calculate if the point belongs to Malderbort's set
 	int itr, color, i, j = (int)arg;
 	float cx, cy = CYN-j*deltay;
 	double x, y, xx, yy, xy;	 	
-	for (i = 0; i < XMAX; ++i)
-	{
+	for (i = 0; i < XMAX; ++i){
 		cx = CX0 +i*deltax;				
 		x = 0, y = 0, xx = 0, yy = 0;
-		for(itr = 1; (itr < MAX_ITR) && ((xx + yy) < 4.0); itr++)
-		{
+		for(itr = 1; (itr < MAX_ITR) && ((xx + yy) < 4.0); itr++){
 			xx = x * x;
 			yy = y * y;
 			xy = x * y;
@@ -98,18 +94,14 @@ void calc_color(void *arg)
 	}
 }
 
-void parseArguments(int argc, char *argv[])
-{	
-    if(argc > 1)
-    {
+void parseArguments(int argc, char *argv[]){	
+	if(argc > 1){
 		XMAX = atoi(argv[1]);
 		YMAX = XMAX;		
-        if(argc>2)
-		{
+		if(argc>2){
 			MAX_ITR = atoi(argv[2]);
 			if(argc>3)
 				NUM_THRDS = atoi(argv[3]);
-		}        	
-		
-    }    
+		} 	
+	}    
 }

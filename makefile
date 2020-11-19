@@ -1,5 +1,5 @@
-fractaling: fractaling.c tpool.c xmem.c
-	gcc -pthread tpool.c xmem.c fractaling.c -o fractaling
+fractaling: fractaling.c lib/tpool.c lib/xmem.c
+	gcc -pthread lib/tpool.c lib/xmem.c fractaling.c -o fractaling
 
 #fractaling.o: fractaling.c
 #	gcc -c -pthread fractaling.c
